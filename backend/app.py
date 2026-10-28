@@ -333,13 +333,30 @@ def api_update_settings(settings: Dict[str, str]):
 # -------------------------------------------------------------
 # Static Files & SPA Routing
 # -------------------------------------------------------------
-frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+frontend_dir = os.path.join(root_dir, "frontend")
+
+css_dir = os.path.join(root_dir, "css")
+if not os.path.exists(css_dir):
+    css_dir = os.path.join(frontend_dir, "css")
+if os.path.exists(css_dir):
+    app.mount("/css", StaticFiles(directory=css_dir), name="css")
+
+js_dir = os.path.join(root_dir, "js")
+if not os.path.exists(js_dir):
+    js_dir = os.path.join(frontend_dir, "js")
+if os.path.exists(js_dir):
+    app.mount("/js", StaticFiles(directory=js_dir), name="js")
+
 if os.path.exists(frontend_dir):
     app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
 @app.get("/")
 def serve_index():
     """Serve the single page application HTML."""
+    root_index = os.path.join(root_dir, "index.html")
+    if os.path.exists(root_index):
+        return FileResponse(root_index)
     index_file = os.path.join(frontend_dir, "index.html")
     if os.path.exists(index_file):
         return FileResponse(index_file)

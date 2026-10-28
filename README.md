@@ -1,6 +1,7 @@
 # GenCV: AI-Powered Portfolio Management & Dynamic Resume Generator
 > **Powered by Gemini AI** • Built with Python (FastAPI), SQLite, Google Sheets API, and Vanilla Modern CSS/JS.
-> **Repository**: [https://github.com/Adityac17/GenCV](https://github.com/Adityac17/GenCV) • **Connected Google Sheet**: [View Spreadsheet](https://docs.google.com/spreadsheets/d/1663le16ErUauJUFrSak8vgA9vY9cLKoAYDw2YosqA70/edit?gid=0#gid=0)
+> **Live Demo (GitHub Pages)**: [https://adityac17.github.io/GenCV/](https://adityac17.github.io/GenCV/)
+> **GitHub Repository**: [https://github.com/Adityac17/GenCV](https://github.com/Adityac17/GenCV) • **Connected Google Sheet**: [View Spreadsheet](https://docs.google.com/spreadsheets/d/1663le16ErUauJUFrSak8vgA9vY9cLKoAYDw2YosqA70/edit?gid=0#gid=0)
 
 GenCV is an end-to-end career portfolio database and job-tailored resume generation platform. It maintains comprehensive career information, categorized skills, certifications, projects, and work experience in a structured relational database, integrates the **Google Gemini API** for unstructured parsing, job description (JD) matching, and grounded resume tailoring, synchronizes bidirectionally with **Google Sheets**, and exports ATS-optimized resumes in both **PDF** and **Microsoft Word (.docx)** formats.
 

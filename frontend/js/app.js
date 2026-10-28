@@ -10,6 +10,7 @@ const App = {
 
   async init() {
     this.initTheme();
+    await API.init();
     this.bindNavigation();
     this.bindModals();
     this.bindSettings();
@@ -127,11 +128,14 @@ const App = {
         e.preventDefault();
         const apiKey = document.getElementById('input-gemini-key').value.trim();
         const webhookUrl = document.getElementById('input-sheets-webhook').value.trim();
+        const customApiEl = document.getElementById('input-custom-api-url');
+        const customApi = customApiEl ? customApiEl.value.trim() : '';
 
         try {
           await API.updateSettings({
             gemini_api_key: apiKey,
-            google_sheets_webhook_url: webhookUrl
+            google_sheets_webhook_url: webhookUrl,
+            custom_backend_url: customApi
           });
           this.apiKey = apiKey;
           this.showToast('Settings saved successfully', 'success');
@@ -165,16 +169,27 @@ const App = {
       ResumeBuilder.initDefaultSelections(this.portfolio);
       SheetsSync.updateSyncStatus(this.portfolio.settings);
 
-      // Check API Key status
-      const hasKey = this.portfolio.settings?.gemini_api_key_set;
+      // Check API Key and Mode status
+      const localKey = localStorage.getItem('gencv_gemini_key');
+      const hasKey = this.portfolio.settings?.gemini_api_key_set || !!localKey;
       const apiBadge = document.getElementById('api-status-badge');
       if (apiBadge) {
-        if (hasKey) {
-          apiBadge.className = 'api-pill';
-          apiBadge.innerHTML = `<span class="api-pill-dot"></span> Gemini AI Ready`;
+        if (API.isStaticMode) {
+          if (hasKey) {
+            apiBadge.className = 'api-pill';
+            apiBadge.innerHTML = `<span class="api-pill-dot" style="background: #10b981;"></span> Gemini AI Ready (GitHub Pages)`;
+          } else {
+            apiBadge.className = 'api-pill';
+            apiBadge.innerHTML = `<span class="api-pill-dot" style="background: #6366f1;"></span> GitHub Pages (Live Demo)`;
+          }
         } else {
-          apiBadge.className = 'api-pill missing';
-          apiBadge.innerHTML = `<span class="api-pill-dot"></span> Gemini Key (Optional/Fallback Active)`;
+          if (hasKey) {
+            apiBadge.className = 'api-pill';
+            apiBadge.innerHTML = `<span class="api-pill-dot"></span> Gemini AI Ready (Backend)`;
+          } else {
+            apiBadge.className = 'api-pill missing';
+            apiBadge.innerHTML = `<span class="api-pill-dot"></span> Backend Active (NLP Matcher)`;
+          }
         }
       }
 
@@ -182,6 +197,10 @@ const App = {
       const keyInput = document.getElementById('input-gemini-key');
       if (keyInput && this.portfolio.settings?.gemini_api_key_masked) {
         keyInput.placeholder = `Current Key: ${this.portfolio.settings.gemini_api_key_masked}`;
+      }
+      const customApiInput = document.getElementById('input-custom-api-url');
+      if (customApiInput) {
+        customApiInput.value = localStorage.getItem('gencv_custom_api_url') || '';
       }
 
       // Update dashboard candidate name

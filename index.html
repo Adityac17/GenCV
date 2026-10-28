@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GenCV | AI-Powered Portfolio Database & Dynamic Resume Generator</title>
+  <meta name="description" content="Centralized portfolio management system with Gemini API intelligence, Google Sheets synchronization, and ATS-optimized dynamic resume generator.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/resume_templates.css">
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header class="app-header">
+    <div class="brand-wrapper" onclick="App.switchView('dashboard')">
+      <div class="brand-logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+      </div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <span class="brand-name">GenCV</span>
+          <span class="brand-tag">Powered by Gemini AI</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab-btn active" data-view="dashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        Dashboard
+      </button>
+      <button class="nav-tab-btn" data-view="portfolio">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Portfolio Database
+      </button>
+      <button class="nav-tab-btn" data-view="studio">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        JD Matcher & Studio
+      </button>
+      <button class="nav-tab-btn" data-view="history">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Saved Resumes
+      </button>
+      <button class="nav-tab-btn" data-view="sheets">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        Google Sheets Sync
+      </button>
+      <button class="nav-tab-btn" data-view="settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        Settings
+      </button>
+    </nav>
+
+    <!-- Right Controls -->
+    <div class="header-actions">
+      <div id="api-status-badge" class="api-pill" onclick="App.switchView('settings')" style="cursor: pointer;" title="Configure Gemini API Key in Settings">
+        <span class="api-pill-dot"></span> Checking API...
+      </div>
+      <button class="btn-icon" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+        <span id="theme-icon-container">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- ======================================================================
+         1. DASHBOARD OVERVIEW VIEW
+         ====================================================================== -->
+    <section id="view-dashboard" class="view-section active">
+      <div class="quick-actions-bar">
+        <!-- Candidate Profile Banner -->
+        <div class="banner-card">
+          <div>
+            <span class="tag-badge" style="margin-bottom: 0.75rem; display: inline-block;">
+              AI Portfolio Management Active
+            </span>
+            <h3 id="dash-candidate-name">Aditya Sunil Chouksey</h3>
+            <p id="dash-candidate-title">AI Automation Engineer & Full-Stack Developer</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" data-goto="studio">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              Tailor Resume for a Job Description
+            </button>
+            <button class="btn btn-secondary" data-goto="portfolio">
+              Manage Database Records
+            </button>
+          </div>
+        </div>
+
+        <!-- Google Sheets Live Connector Card -->
+        <div class="stat-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="stat-top">
+              <div class="stat-icon" style="background: rgba(16, 185, 129, 0.12); color: var(--success);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+              </div>
+              <span class="tag-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Connected</span>
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">Google Sheets Database</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              Last Sync: <span id="sheets-last-sync-time" style="color: var(--text-primary); font-weight: 600;">Never</span>
+            </p>
+          </div>
+          <div>
+            <a id="sheets-live-url-link" href="#" target="_blank" class="btn btn-secondary btn-sm" style="display: none; width: 100%; margin-bottom: 0.5rem; justify-content: center;">
+              Open Linked Google Sheet ↗
+            </a>
+            <button class="btn btn-primary btn-sm" style="width: 100%; justify-content: center;" data-goto="sheets">
+              Synchronize to Sheets
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Core Technical Skills</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-skills-count">26</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Work Experiences</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-exp-count">3</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Featured Projects</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-proj-count">3</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Certifications & Honors</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-certs-count">3</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Saved Resumes</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-resumes-count">0</div>
+        </div>
+      </div>
+
+      <!-- Recent Generated Resumes preview block -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; font-weight: 700;">Recently Customized Resumes</h3>
+          <button class="btn btn-secondary btn-sm" data-goto="history">View All Resumes</button>
+        </div>
+        <div id="dash-recent-resumes">
+          <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 1.5rem;">Loading recent resumes...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         2. PORTFOLIO DATABASE VIEW
+         ====================================================================== -->
+    <section id="view-portfolio" class="view-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Professional Portfolio Database</h2>
+          <p class="section-subtitle">Manage all career information, skills, and qualifications in one centralized repository.</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="Portfolio.openAIParserModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Import Unstructured Resume (Gemini AI)
+        </button>
+      </div>
+
+      <!-- Category Nav Tabs -->
+      <div class="portfolio-tabs-nav">
+        <button class="sub-tab-btn active" data-category="personal">Personal & Contact</button>
+        <button class="sub-tab-btn" data-category="skills">Skills & Tools</button>
+        <button class="sub-tab-btn" data-category="work_experience">Work Experience</button>
+        <button class="sub-tab-btn" data-category="projects">Projects</button>
+        <button class="sub-tab-btn" data-category="education">Education</button>
+        <button class="sub-tab-btn" data-category="certifications">Certifications</button>
+        <button class="sub-tab-btn" data-category="achievements">Achievements</button>
+        <button class="sub-tab-btn" data-category="publications">Publications</button>
+        <button class="sub-tab-btn" data-category="languages">Languages</button>
+      </div>
+
+      <!-- Dynamic Category Content Area -->
+      <div id="portfolio-content-area">
+        <!-- Rendered dynamically by portfolio.js -->
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3. JD MATCHER & RESUME STUDIO VIEW (Split Screen)
+         ====================================================================== -->
+    <section id="view-studio" class="view-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Job Description Analyzer & Dynamic Resume Studio</h2>
+          <p class="section-subtitle">Analyze target job descriptions, view skill matching scores, customize parameters, and export job-specific resumes.</p>
+        </div>
+      </div>
+
+      <div class="studio-layout">
+        <!-- LEFT COLUMN: JD Input, Analysis, & Item Selection Matrix -->
+        <div class="studio-panel">
+          <!-- Preset buttons -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <label class="form-label" style="margin-bottom: 0;">1. Target Job Description (JD)</label>
+            <div style="display: flex; gap: 0.4rem;">
+              <button class="btn btn-secondary btn-sm" id="btn-preset-fs-ai" title="Load Senior Full-Stack AI Engineer JD">Preset 1: Full-Stack AI</button>
+              <button class="btn btn-secondary btn-sm" id="btn-preset-ds" title="Load Lead Data Scientist JD">Preset 2: Data Scientist</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input type="text" class="form-control" id="jd-role-input" placeholder="Target Role Title (e.g. Senior Full-Stack AI Engineer)">
+          </div>
+
+          <div class="form-group">
+            <textarea class="form-control" id="jd-textarea" rows="6" placeholder="Paste the complete Job Description text here, or click one of the preset buttons above..."></textarea>
+          </div>
+
+          <button class="btn btn-gradient" id="btn-run-jd-match" style="width: 100%; margin-bottom: 1.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            Analyze & Match with Gemini AI
+          </button>
+
+          <!-- Gemini Analysis Results (Score gauge & skills breakdown) -->
+          <div id="jd-analysis-results">
+            <!-- Rendered dynamically by jd_matcher.js upon analysis -->
+          </div>
+
+          <!-- Professional Summary Editor -->
+          <div class="form-group" style="margin-top: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <label class="form-label" style="margin-bottom: 0;">Tailored Professional Summary</label>
+              <span style="font-size: 0.725rem; color: var(--success); font-weight: 600;">✓ Strictly Verified (Zero Hallucination)</span>
+            </div>
+            <textarea class="form-control" id="tailored-summary-input" rows="3" placeholder="AI-crafted executive summary aligned with target job description..."></textarea>
+          </div>
+
+          <!-- Selection Matrix Header -->
+          <div style="margin-top: 1.5rem; margin-bottom: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+            <h4 style="font-size: 1.1rem; font-weight: 700;">2. Customize Resume Information</h4>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.2rem;">
+              Check or uncheck individual experiences, bullet points, skills, and projects to tailor your resume layout.
+            </p>
+          </div>
+
+          <!-- Section Order Widget -->
+          <div id="section-order-container" class="section-order-widget">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary);">Section Layout Order</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">Reorder sections dynamically</span>
+            </div>
+            <div id="section-order-list" class="section-order-list"></div>
+          </div>
+
+          <!-- Selection Matrix container -->
+          <div id="resume-customization-matrix">
+            <!-- Rendered dynamically by resume_builder.js -->
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Real-Time Live Resume Preview & Toolbar -->
+        <div class="studio-preview-panel">
+          <!-- Density, Emphasis & Scannability Toolbar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 0.775rem; font-weight: 700; color: var(--text-secondary);">Density:</span>
+                <div class="density-pill-group">
+                  <button class="density-btn active" data-density="compact" title="Curated for 1-Page standard ATS format">1-Page Compact</button>
+                  <button class="density-btn" data-density="detailed" title="Full multi-page comprehensive view">Detailed (2-Page)</button>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 0.775rem; font-weight: 700; color: var(--text-secondary);">Emphasis:</span>
+                <div class="emphasis-pill-group">
+                  <button class="emphasis-btn active" data-emphasis="technical" title="Focus on technical depth & code stack">Technical</button>
+                  <button class="emphasis-btn" data-emphasis="leadership" title="Focus on architecture & leadership">Leadership</button>
+                  <button class="emphasis-btn" data-emphasis="balanced" title="Balanced perspective">Balanced</button>
+                </div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.775rem; color: var(--text-secondary); cursor: pointer;">
+                <input type="checkbox" id="toggle-keyword-highlights" checked>
+                Highlight Keywords
+              </label>
+            </div>
+          </div>
+
+          <!-- Recruiter Scan Metrics Bar -->
+          <div id="resume-scan-metrics-bar" class="resume-scan-metrics-bar"></div>
+
+          <!-- Template Picker Bar -->
+          <div class="template-picker-bar">
+            <div>
+              <span style="font-size: 0.775rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Template Layout:</span>
+              <div class="template-btn-group">
+                <button class="template-opt-btn active" data-template="template-modern-tech">Modern Tech</button>
+                <button class="template-opt-btn" data-template="template-classic-ats">Classic ATS</button>
+                <button class="template-opt-btn" data-template="template-minimalist-executive">Minimalist Executive</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Download & Action Buttons -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-sm" id="btn-download-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Download PDF
+            </button>
+            <button class="btn btn-secondary btn-sm" id="btn-download-docx">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+              Download Word (.docx)
+            </button>
+            <button class="btn btn-secondary btn-sm" id="btn-save-resume-snapshot">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              Save to History
+            </button>
+          </div>
+
+          <!-- The Live Resume Paper Document -->
+          <div id="live-resume-paper" class="resume-paper-wrapper template-modern-tech">
+            <!-- Dynamically populated in real-time by resume_builder.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. SAVED RESUMES HISTORY VIEW
+         ====================================================================== -->
+    <section id="view-history" class="view-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Saved Customized Resumes</h2>
+          <p class="section-subtitle">Review, compare, and reload resumes generated for different target roles.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" data-goto="studio">Create New Role Resume</button>
+      </div>
+
+      <div id="resumes-history-list">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. GOOGLE SHEETS SYNCHRONIZATION VIEW
+         ====================================================================== -->
+    <section id="view-sheets" class="view-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Google Sheets Synchronization & Export</h2>
+          <p class="section-subtitle">Maintain real-time parity between GenCV and Google Sheets across all 9 portfolio categories.</p>
+        </div>
+      </div>
+
+      <!-- Connected Sheet Info Callout -->
+      <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--success);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          </div>
+          <div>
+            <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+              Connected Google Sheet
+              <span class="tag-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.7rem; padding: 0.15rem 0.5rem;">Live Active</span>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-family: monospace; word-break: break-all;">
+              https://docs.google.com/spreadsheets/d/1663le16ErUauJUFrSak8vgA9vY9cLKoAYDw2YosqA70/edit
+            </div>
+          </div>
+        </div>
+        <a href="https://docs.google.com/spreadsheets/d/1663le16ErUauJUFrSak8vgA9vY9cLKoAYDw2YosqA70/edit?gid=0#gid=0" target="_blank" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+          Open Sheet in New Tab ↗
+        </a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; align-items: start;">
+        <!-- Left: Webhook & Sync Controls -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.75rem;">
+          <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">Google Sheets Connector</h3>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5;">
+            Export all portfolio categories into designated tabs (<code>Personal_Info</code>, <code>Skills</code>, <code>Work_Experience</code>, <code>Projects</code>, <code>Education</code>, <code>Certifications</code>, etc.) in your Google Spreadsheet.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Google Apps Script Web App URL *</label>
+            <input type="url" class="form-control" id="sheets-webhook-url-input" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; display: block;">
+              Deploy the provided Google Apps Script in your spreadsheet to enable one-click updates.
+            </span>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="btn-trigger-sheets-sync">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              Synchronize Database Now
+            </button>
+            <button class="btn btn-secondary" id="btn-view-apps-script">
+              View Google Apps Script Code
+            </button>
+            <button class="btn btn-secondary" id="btn-download-csv-bundle">
+              Download CSV Tables Bundle
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Step-by-Step Setup Guide -->
+        <div style="background: rgba(30, 41, 59, 0.4); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem;">
+          <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Quick 1-Minute Setup
+          </h4>
+          <ol style="padding-left: 1.25rem; font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6;">
+            <li>Open the <a href="https://docs.google.com/spreadsheets/d/1663le16ErUauJUFrSak8vgA9vY9cLKoAYDw2YosqA70/edit?gid=0#gid=0" target="_blank" style="color: var(--accent-primary);">connected spreadsheet</a></li>
+            <li>Click <strong>Extensions</strong> → <strong>Apps Script</strong>.</li>
+            <li>Copy our ready-to-use template code (configured with this Sheet ID).</li>
+            <li>Click <strong>Deploy</strong> → <strong>New deployment</strong> → Type: <strong>Web app</strong>.</li>
+            <li>Set <em>Who has access</em> to <strong>Anyone</strong>.</li>
+            <li>Paste the generated Web App URL on the left and hit <strong>Synchronize</strong>!</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. SETTINGS VIEW
+         ====================================================================== -->
+    <section id="view-settings" class="view-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Application Settings & Credentials</h2>
+          <p class="section-subtitle">Configure Gemini API key, Google Sheets endpoint, and sample database reset.</p>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.75rem; max-width: 800px;">
+        <form id="system-settings-form">
+          <div class="form-group">
+            <label class="form-label">Google Gemini API Key</label>
+            <input type="password" class="form-control" id="input-gemini-key" placeholder="AIzaSy... (leave blank to keep current key or env var)">
+            <span style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.35rem; display: block;">
+              Powers unstructured parsing, JD matching, and verified resume bullet tailoring. Keys are stored safely in local database/env.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Google Sheets Webhook URL</label>
+            <input type="url" class="form-control" id="input-sheets-webhook" placeholder="https://script.google.com/macros/s/.../exec">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Custom Backend API URL (Optional)</label>
+            <input type="url" class="form-control" id="input-custom-api-url" placeholder="https://your-gencv-api.onrender.com (leave blank for GitHub Pages mode)">
+            <span style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.35rem; display: block;">
+              On GitHub Pages, GenCV operates 100% in client-side mode with browser storage. If you deploy the Python FastAPI backend to Render/Railway, specify the URL here.
+            </span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+            <button type="button" class="btn btn-danger-outline btn-sm" id="btn-reset-sample-data">
+              Reset Database to Sample Data
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Save Settings
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       MODALS
+       ====================================================================== -->
+
+  <!-- 1. Add / Edit Portfolio Item Modal -->
+  <div class="modal-overlay" id="portfolio-item-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="item-modal-title">Edit Entry</h3>
+        <button class="modal-close" onclick="App.closeModal('portfolio-item-modal')">&times;</button>
+      </div>
+      <form id="portfolio-item-form">
+        <input type="hidden" id="item-modal-category">
+        <input type="hidden" id="item-modal-id">
+        <div id="item-modal-body">
+          <!-- Injected dynamically based on category -->
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('portfolio-item-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. AI Unstructured Data Parser Modal -->
+  <div class="modal-overlay" id="ai-parser-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Import Unstructured Text via Gemini AI</h3>
+        <button class="modal-close" onclick="App.closeModal('ai-parser-modal')">&times;</button>
+      </div>
+      <form id="ai-parser-form">
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Paste raw resume text, LinkedIn profile export, or professional bio below. Gemini API will parse and organize it into structured database fields.
+        </p>
+        <div class="form-group">
+          <textarea class="form-control" id="unstructured-text-input" rows="8" placeholder="Paste raw resume or bio here..."></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('ai-parser-modal')">Cancel</button>
+          <button type="submit" class="btn btn-gradient" id="btn-run-ai-parse">Parse & Import with Gemini</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Google Apps Script Code Modal -->
+  <div class="modal-overlay" id="apps-script-modal">
+    <div class="modal-box" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Google Apps Script Integration Code</h3>
+        <button class="modal-close" onclick="App.closeModal('apps-script-modal')">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+        Paste this script into <strong>Extensions → Apps Script</strong> in your Google Sheet, then Deploy as a Web App:
+      </p>
+      <pre id="apps-script-code-display" style="background: var(--bg-input); padding: 1rem; border-radius: var(--radius-md); font-family: 'JetBrains Mono', monospace; font-size: 0.775rem; max-height: 340px; overflow-y: auto; color: #a5b4fc; border: 1px solid var(--border-color);"></pre>
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
+        <button class="btn btn-secondary" onclick="App.closeModal('apps-script-modal')">Close</button>
+        <button class="btn btn-primary" id="btn-copy-script-code">Copy Script to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/seed_portfolio.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/portfolio.js"></script>
+  <script src="js/jd_matcher.js"></script>
+  <script src="js/resume_builder.js"></script>
+  <script src="js/sheets_sync.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
