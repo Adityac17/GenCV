@@ -11,9 +11,14 @@ GenCV is an end-to-end career portfolio database and job-tailored resume generat
 
 > Watch the full end-to-end video walkthrough demonstrating portfolio database management, Gemini API unstructured parsing, job description analysis, interactive resume parameter customization (density, emphasis, and section reordering), and Google Sheets synchronization.
 
-[![GenCV Demo Video Walkthrough](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+[GenCV Demo Video Walkthrough](
 
-*Note: Replace the link and thumbnail above with your recorded video walkthrough URL (YouTube, Loom, Google Drive, or embed locally with `![Demo](./demo_walkthrough.mp4)`).*
+
+
+https://github.com/user-attachments/assets/f6cc4822-df79-474f-bf0b-9e71d3efeed2
+
+
+
 
 ---
 
