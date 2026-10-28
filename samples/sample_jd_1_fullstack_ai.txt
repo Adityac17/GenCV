@@ -1,0 +1,32 @@
+Job Title: Senior Full-Stack AI Engineer
+Company: ApexAI Platforms
+Location: San Francisco, CA (Hybrid / Remote Friendly)
+Employment Type: Full-Time
+
+About ApexAI:
+ApexAI is an enterprise generative AI company building autonomous copilot infrastructure and real-time knowledge retrieval engines for Fortune 500 enterprises. We are scaling rapidly and looking for a Senior Full-Stack AI Engineer to spearhead our next-generation RAG platform.
+
+Role Overview:
+As a Senior Full-Stack AI Engineer, you will architect, build, and maintain production-grade web applications and high-throughput AI services. You will bridge modern user experience with state-of-the-art LLM orchestration, vector databases, and containerized cloud services.
+
+Key Responsibilities:
+- Architect and ship low-latency microservices using Python (FastAPI) and modern async patterns.
+- Design responsive, interactive web interfaces using React, Next.js, and TypeScript.
+- Implement production Retrieval-Augmented Generation (RAG) pipelines leveraging Google Gemini API, pgvector, and distributed vector stores.
+- Build streaming WebSocket/SSE endpoints for real-time generative responses with sub-second time-to-first-token (TTFT).
+- Deploy and monitor containerized workloads on Kubernetes and AWS ECS with automated CI/CD pipelines.
+- Collaborate with product designers and AI researchers to translate complex models into intuitive customer-facing workflows.
+
+Required Qualifications:
+- 4+ years of professional software engineering experience across modern frontend and backend architectures.
+- Strong proficiency in Python and TypeScript / JavaScript.
+- Hands-on experience developing RESTful and streaming APIs with FastAPI or Node.js.
+- Demonstrated experience deploying LLM applications (Gemini API, LangChain, or direct model SDKs).
+- Deep experience with relational databases (PostgreSQL) and vector indexing (pgvector, Qdrant, or Pinecone).
+- Strong foundation in containerization (Docker) and cloud deployments (AWS or GCP).
+- Excellent system design and technical communication skills.
+
+Preferred Qualifications:
+- Master's degree in Computer Science or related quantitative field.
+- Experience with Go (Golang) for high-performance network agents.
+- Open-source contributions to AI/developer tools or active technical writing.

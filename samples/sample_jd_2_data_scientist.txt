@@ -1,0 +1,30 @@
+Job Title: Lead Data Scientist & Machine Learning Specialist
+Company: Quantitative Intelligence Analytics (QIA)
+Location: New York, NY / Remote Eligible
+Employment Type: Full-Time
+
+About QIA:
+QIA is a quantitative research and predictive analytics firm operating at the intersection of natural language understanding, financial time-series forecasting, and machine learning infrastructure.
+
+Role Overview:
+We are seeking an experienced Lead Data Scientist & Machine Learning Specialist to drive our model research, evaluation, and production inference systems. You will lead NLP model fine-tuning, benchmark evaluation pipelines, and optimize deep learning inference speed on complex unstructured document repositories.
+
+Key Responsibilities:
+- Design and train deep learning architectures (Transformers, BERT, RoBERTa, and LLM backbones) for multi-label classification and entity extraction.
+- Perform parameter-efficient fine-tuning (LoRA, QLoRA) and model distillation to optimize inference latency and memory footprints.
+- Develop statistical evaluation frameworks and automated data cleansing pipelines processing millions of unstructured text records weekly.
+- Author research reports, benchmark whitepapers, and present findings to leadership and quantitative analysts.
+- Collaborate with MLOps engineers to deploy scalable model inference containers using PyTorch, HuggingFace, and Python.
+
+Required Qualifications:
+- M.S. or Ph.D. in Computer Science, Machine Learning, Data Science, or related quantitative discipline.
+- 4+ years of hands-on experience developing and deploying machine learning models in production environments.
+- Deep expertise in Python, PyTorch, HuggingFace Transformers, Pandas, Scikit-Learn, and NumPy.
+- Strong theoretical foundation in NLP, loss function optimization, and statistical modeling.
+- Proven experience fine-tuning LLMs or foundation models with verified performance gains.
+- Publication record in recognized conferences (IEEE, ACM, NeurIPS, ICML, CIKM) or proven open-source research impact.
+
+Preferred Qualifications:
+- Experience with low-latency speculative decoding or edge model acceleration.
+- Google Cloud Professional Machine Learning Engineer or AWS ML Specialty certification.
+- Hands-on experience with vector search algorithms and embedding space evaluations.
